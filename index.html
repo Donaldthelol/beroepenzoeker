@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Beroepentest zonder punten</title>
+  <title>Beroepentest voor Kinderen</title>
   <style>
     body {
       font-family: 'Comic Sans MS', cursive;
@@ -95,7 +95,9 @@
 </footer>
 
 <script>
-  // Vragen + beroepen die bij 'ja' of 'beetje' passen
+  // Vragen, elk gekoppeld aan beroepen (meerdere mogelijk)
+  // Je geeft per antwoord 'ja' = 2 punten, 'beetje' = 1 punt, 'nee' = 0 punten
+  // Zo kan het resultaat "slim" bepalen welke beroepen het beste bij jou passen.
   const vragen = [
     { vraag: "Speel je graag buiten?", beroepen: ["Boswachter", "Sportleraar", "Landbouwer"] },
     { vraag: "Vind je het leuk om puzzels op te lossen?", beroepen: ["Programmeur", "Detective", "Wetenschapper"] },
@@ -138,88 +140,93 @@
     { vraag: "Ben je goed in luisteren naar anderen?", beroepen: ["Psycholoog", "Coach", "Maatschappelijk werker"] },
     { vraag: "Zou je graag op een boerderij werken?", beroepen: ["Boer", "Dierverzorger", "Landbouwer"] },
     { vraag: "Hou je van knutselen?", beroepen: ["Kunstenares", "Timmerman", "Ontwerper"] },
-    { vraag: "Ben je goed met cijfers en geld?", beroepen: ["Accountant", "Bankier", "Boekhouder"] },
+    { vraag: "Ben je goed met cijfers en geld?", beroepen: ["Accountant", "Bankier", "Ondernemer"] },
     { vraag: "Vind je het leuk om mensen te interviewen?", beroepen: ["Journalist", "Presentator", "Schrijver"] },
     { vraag: "Ben je graag de baas?", beroepen: ["Manager", "Ondernemer", "Directeur"] },
     { vraag: "Wil je graag dingen ontwerpen?", beroepen: ["Architect", "Grafisch ontwerper", "Modeontwerper"] },
-    { vraag: "Werk je graag met dieren zoals honden of katten?", beroepen: ["Dierenarts", "Hondenuitlater", "Dierverzorger"] },
+    { vraag: "Werk je graag met dieren zoals honden of katten?", beroepen: ["Dierenarts", "Hondentrainer", "Dierverzorger"] },
     { vraag: "Zou je graag een robot willen maken?", beroepen: ["Programmeur", "Ingenieur", "Technicus"] },
-    { vraag: "Ben je goed in kaartlezen of navigeren?", beroepen: ["Piloot", "Kapitein", "Reisleider"] },
-    { vraag: "Hou je van talen leren?", beroepen: ["Vertaler", "Leraar", "Tolk"] },
+    { vraag: "Ben je goed in kaartlezen of navigeren?", beroepen: ["Piloot", "Kapitein", "Luchtverkeersleider"] },
+    { vraag: "Hou je van talen leren?", beroepen: ["Vertaler", "Tolk", "Leraar"] },
     { vraag: "Wil je later je eigen bedrijf hebben?", beroepen: ["Ondernemer", "Manager", "Directeur"] }
   ];
 
   const quizContainer = document.getElementById("quiz");
 
+  // Maak vragen met opties
   vragen.forEach((item, i) => {
-    const div = document.createElement("div");
-    div.className = "question";
-
-    div.innerHTML = `
-      <h3>Vraag ${i+1}: ${item.vraag}</h3>
+    const divVraag = document.createElement("div");
+    divVraag.className = "question";
+    divVraag.innerHTML = `
+      <h3>Vraag ${i + 1}: ${item.vraag}</h3>
       <div class="options">
-        <label><input type="radio" name="vraag${i}" value="ja"> Ja</label>
-        <label><input type="radio" name="vraag${i}" value="beetje"> Een beetje</label>
-        <label><input type="radio" name="vraag${i}" value="nee"> Nee</label>
+        <label><input type="radio" name="vraag${i}" value="ja" /> Ja</label>
+        <label><input type="radio" name="vraag${i}" value="beetje" /> Een beetje</label>
+        <label><input type="radio" name="vraag${i}" value="nee" /> Nee</label>
       </div>
     `;
-    quizContainer.appendChild(div);
+    quizContainer.appendChild(divVraag);
   });
 
+  // Knop voor resultaat
   const button = document.createElement("button");
-  button.textContent = "Bekijk mijn beroep!";
+  button.textContent = "Resultaat bekijken";
+  quizContainer.appendChild(button);
+
   button.onclick = () => {
-    // Verzamel gekozen beroepen alleen voor 'ja' en 'beetje'
-    let gekozenBeroepen = [];
-    for(let i=0; i<vragen.length; i++) {
-      const radios = document.getElementsByName("vraag"+i);
-      let gekozenAntwoord = null;
-      for(const r of radios) {
-        if(r.checked) gekozenAntwoord = r.value;
+    // Maak een object met beroepen en hun scores
+    const scores = {};
+
+    // Loop alle vragen langs
+    for(let i = 0; i < vragen.length; i++){
+      const radios = document.getElementsByName(`vraag${i}`);
+      let antwoord = null;
+      for (let r of radios) {
+        if(r.checked) {
+          antwoord = r.value;
+          break;
+        }
       }
-      if(gekozenAntwoord === "ja" || gekozenAntwoord === "beetje") {
-        gekozenBeroepen = gekozenBeroepen.concat(vragen[i].beroepen);
+      if(!antwoord) {
+        alert(`Je bent vraag ${i + 1} vergeten in te vullen!`);
+        return;
       }
+
+      // Punten toekennen: ja=2, beetje=1, nee=0
+      let punten = antwoord === "ja" ? 2 : antwoord === "beetje" ? 1 : 0;
+
+      // Voeg punten toe aan alle beroepen die horen bij deze vraag
+      vragen[i].beroepen.forEach(beroep => {
+        if(!scores[beroep]) scores[beroep] = 0;
+        scores[beroep] += punten;
+      });
     }
 
-    if(gekozenBeroepen.length === 0) {
-      alert("Je moet minstens één vraag beantwoorden met 'Ja' of 'Een beetje'!");
-      return;
-    }
+    // Sorteer beroepen op hoogste score
+    const sortedBeroepen = Object.entries(scores).sort((a,b) => b[1] - a[1]);
 
-    // Tel hoe vaak beroepen voorkomen
-    const telBeroepen = {};
-    gekozenBeroepen.forEach(b => {
-      telBeroepen[b] = (telBeroepen[b] || 0) + 1;
+    // Pak top 3 beroepen
+    const top3 = sortedBeroepen.slice(0,3);
+
+    // Resultaat maken
+    let resultaatTekst = "🎉 Dit zijn de beroepen die het beste bij jou passen:\n\n";
+    top3.forEach(([beroep, score], index) => {
+      resultaatTekst += `${index + 1}. ${beroep} (score: ${score})\n`;
     });
 
-    // Sorteer beroepen op aantal keren dat ze gekozen zijn
-    const gesorteerd = Object.entries(telBeroepen)
-      .sort((a,b) => b[1] - a[1])
-      .map(item => item[0]);
+    // Verwijder eerdere resultaat
+    let bestaandResultaat = document.getElementById("resultaat");
+    if (bestaandResultaat) bestaandResultaat.remove();
 
-    // Maak resultaat
-    const top3 = gesorteerd.slice(0,3);
-
-    // Laat resultaat zien
-    let resultaatTekst = "Dit zijn de beroepen die het beste bij jou passen:\n\n";
-    top3.forEach((beroep, i) => {
-      resultaatTekst += `${i+1}. ${beroep}\n`;
-    });
-
-    // Verwijder eerdere resultaten
-    const bestaand = document.getElementById("resultaat");
-    if(bestaand) bestaand.remove();
-
-    // Toon resultaat onderaan
+    // Maak nieuw resultaat element
     const resultaatDiv = document.createElement("div");
     resultaatDiv.id = "resultaat";
     resultaatDiv.textContent = resultaatTekst;
     quizContainer.appendChild(resultaatDiv);
+
+    // Scroll naar resultaat
     resultaatDiv.scrollIntoView({ behavior: "smooth" });
   };
-
-  quizContainer.appendChild(button);
 </script>
 
 </body>
