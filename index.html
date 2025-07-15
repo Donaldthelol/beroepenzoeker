@@ -8,18 +8,14 @@
     body {
       font-family: 'Comic Sans MS', cursive;
       background: linear-gradient(to right, #fceabb, #f8b500);
-      margin: 0; padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      margin: 0;
+      padding: 0;
     }
     header {
       background-color: #ff6f61;
       color: white;
       text-align: center;
       padding: 20px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
     .container {
       max-width: 800px;
@@ -28,7 +24,6 @@
       border-radius: 15px;
       padding: 20px;
       box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-      flex-grow: 1;
     }
     .question {
       margin-bottom: 20px;
@@ -38,46 +33,36 @@
     }
     .options label {
       display: block;
-      margin: 6px 0;
+      margin: 5px 0;
       cursor: pointer;
-      font-size: 1.1em;
     }
     button {
       background-color: #4CAF50;
       color: white;
-      font-size: 1.3em;
-      padding: 12px 25px;
+      font-size: 1em;
+      padding: 10px 20px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       margin-top: 20px;
-      transition: background-color 0.3s ease;
-      display: block;
-      width: 100%;
-      max-width: 300px;
-      margin-left: auto;
-      margin-right: auto;
     }
     button:hover {
       background-color: #45a049;
+    }
+    #resultaat {
+      margin-top: 30px;
+      background: #ffefc1;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      color: #444;
+      white-space: pre-line;
     }
     footer {
       text-align: center;
       padding: 15px;
       font-size: 0.9em;
       color: #666;
-      background: #f8b500;
-      box-shadow: 0 -3px 6px rgba(0,0,0,0.2);
-    }
-    #resultaat {
-      background: #ffefc1;
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 30px;
-      font-size: 1.3em;
-      color: #444;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-      white-space: pre-line;
     }
   </style>
 </head>
@@ -148,121 +133,129 @@
     "Wil je later je eigen bedrijf hebben?"
   ];
 
-  // Type van elke vraag (Creatief, Technisch, Sociaal) op volgorde (modulus 3)
-  // 0 = Creatief, 1 = Technisch, 2 = Sociaal
+  // Beroepen per vraag (match als je 'ja' of 'beetje' kiest)
+  const beroepenPerVraag = [
+    ["Boswachter", "Sportleraar", "Landbouwer"],
+    ["Programmeur", "Detective", "Wetenschapper"],
+    ["Dierenarts", "Boer", "Dierverzorger"],
+    ["Kunstenaar", "Grafisch ontwerper", "Modeontwerper"],
+    ["Ingenieur", "Accountant", "Wiskundige"],
+    ["Verpleegkundige", "Dokter", "Leraar"],
+    ["Bouwvakker", "Architect", "Ingenieur"],
+    ["Schrijver", "Scenarioschrijver", "Journalist"],
+    ["Projectleider", "Coach", "Leraar"],
+    ["Tuinier", "Boswachter", "Dierenverzorger"],
+    ["Programmeur", "IT-specialist", "Webdesigner"],
+    ["Acteur", "Zanger", "Sporter"],
+    ["Muzikant", "Zanger", "Componist"],
+    ["Monteur", "Elektricien", "Technicus"],
+    ["Chef-kok", "Banketbakker", "Restauranthouder"],
+    ["Wetenschapper", "Uitvinder", "Technicus"],
+    ["Schrijver", "Bibliothecaris", "Journalist"],
+    ["Acteur", "Presentator", "Zanger"],
+    ["Leraar", "Kinderverzorger", "Pedagoog"],
+    ["Sportleraar", "Fysiotherapeut", "Atleet"],
+    ["Wetenschapper", "Scheikundige", "Technicus"],
+    ["Projectleider", "Eventplanner", "Manager"],
+    ["Timmerman", "Kunstsmid", "Monteur"],
+    ["Schoonmaker", "Interieurstylist", "Organisator"],
+    ["Politieagent", "Brandweerman", "Militair"],
+    ["Matroos", "Visser", "Bioloog"],
+    ["Dokter", "Verpleegkundige", "Chirurg"],
+    ["Verkoper", "Manager", "Etaleur"],
+    ["Spelontwikkelaar", "Programmeur", "Animator"],
+    ["Fotograaf", "Cameraman", "Filmregisseur"],
+    ["Dierverzorger", "Manager", "Bioloog"],
+    ["Grafisch ontwerper", "Animator", "Game designer"],
+    ["Piloot", "Luchtverkeersleider", "Reisleider"],
+    ["Leraar", "Trainer", "Coach"],
+    ["Boswachter", "Bioloog", "Tuinier"],
+    ["Chef-kok", "Banketbakker", "Voedingsdeskundige"],
+    ["Timmerman", "Monteur", "Elektricien"],
+    ["Automonteur", "Chauffeur", "Verkeersleider"],
+    ["Psycholoog", "Coach", "Maatschappelijk werker"],
+    ["Boer", "Dierverzorger", "Landbouwer"],
+    ["Kunstenares", "Timmerman", "Ontwerper"],
+    ["Accountant", "Bankier", "Boekhouder"],
+    ["Journalist", "Presentator", "Schrijver"],
+    ["Manager", "Ondernemer", "Directeur"],
+    ["Architect", "Grafisch ontwerper", "Modeontwerper"],
+    ["Dierenarts", "Hondenuitlater", "Dierverzorger"],
+    ["Programmeur", "Ingenieur", "Technicus"],
+    ["Piloot", "Kapitein", "Reisleider"],
+    ["Vertaler", "Leraar", "Tolk"],
+    ["Ondernemer", "Manager", "Directeur"]
+  ];
+
   const quizContainer = document.getElementById("quiz");
 
-  vragen.forEach((vraag, index) => {
-    const vraagDiv = document.createElement("div");
-    vraagDiv.className = "question";
-
-    vraagDiv.innerHTML = `
-      <h3>Vraag ${index + 1}: ${vraag}</h3>
+  // Maak vragen + opties
+  vragen.forEach((vraag, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `
+      <h3>Vraag ${i+1}: ${vraag}</h3>
       <div class="options">
-        <label><input type="radio" name="vraag${index}" value="ja" /> Ja</label>
-        <label><input type="radio" name="vraag${index}" value="beetje" /> Een beetje</label>
-        <label><input type="radio" name="vraag${index}" value="nee" /> Nee</label>
+        <label><input type="radio" name="vraag${i}" value="ja"> Ja</label>
+        <label><input type="radio" name="vraag${i}" value="beetje"> Een beetje</label>
+        <label><input type="radio" name="vraag${i}" value="nee"> Nee</label>
       </div>
     `;
-
-    quizContainer.appendChild(vraagDiv);
+    quizContainer.appendChild(div);
   });
 
+  // Knop voor resultaat
   const button = document.createElement("button");
   button.textContent = "Resultaat bekijken";
-  quizContainer.appendChild(button);
-
   button.onclick = () => {
-    let creatief = 0;
-    let technisch = 0;
-    let sociaal = 0;
+    let gekozenBeroepen = [];
 
-    for (let i = 0; i < vragen.length; i++) {
-      const radios = document.getElementsByName(`vraag${i}`);
+    for(let i=0; i<vragen.length; i++) {
+      const radios = document.getElementsByName("vraag"+i);
       let antwoord = null;
-
-      for (let radio of radios) {
-        if (radio.checked) {
-          antwoord = radio.value;
-          break;
-        }
+      for(const r of radios) {
+        if(r.checked) antwoord = r.value;
       }
-
-      if (!antwoord) {
-        alert(`Je hebt vraag ${i + 1} nog niet beantwoord!`);
-        return;
+      if(antwoord === "ja" || antwoord === "beetje") {
+        gekozenBeroepen = gekozenBeroepen.concat(beroepenPerVraag[i]);
       }
-
-      let punten = antwoord === "ja" ? 2 : antwoord === "beetje" ? 1 : 0;
-
-      if (i % 3 === 0) creatief += punten;
-      else if (i % 3 === 1) technisch += punten;
-      else sociaal += punten;
     }
 
-    // Beroepen per type met voorbeelden
-    const beroepenCreatief = [
-      "Kunstenaar",
-      "Schrijver",
-      "Muzikant",
-      "Modeontwerper",
-      "Illustrator",
-      "Grafisch ontwerper"
-    ];
-
-    const beroepenTechnisch = [
-      "Programmeur",
-      "Ingenieur",
-      "Technicus",
-      "Piloot",
-      "Uitvinder",
-      "Elektricien"
-    ];
-
-    const beroepenSociaal = [
-      "Leraar",
-      "Dokter",
-      "Maatschappelijk werker",
-      "Coach",
-      "Verpleegkundige",
-      "Kinderdagverblijf medewerker"
-    ];
-
-    // Helper functie om random beroep te kiezen uit lijst
-    function kiesBeroep(lijst) {
-      return lijst[Math.floor(Math.random() * lijst.length)];
+    if(gekozenBeroepen.length === 0) {
+      alert("Je moet minstens één vraag met 'Ja' of 'Een beetje' beantwoorden!");
+      return;
     }
 
-    // Welke score is het hoogst?
-    const maxScore = Math.max(creatief, technisch, sociaal);
+    // Tel hoe vaak een beroep voorkomt
+    const telBeroepen = {};
+    gekozenBeroepen.forEach(b => {
+      telBeroepen[b] = (telBeroepen[b] || 0) + 1;
+    });
 
-    let resultaatTekst = "";
+    // Sorteer en pak top 3
+    const gesorteerd = Object.entries(telBeroepen)
+      .sort((a,b) => b[1] - a[1])
+      .map(item => item[0])
+      .slice(0, 3);
 
-    if (maxScore === creatief) {
-      const beroep = kiesBeroep(beroepenCreatief);
-      resultaatTekst = `Je bent creatief! Je houdt van tekenen, muziek maken en mooie dingen maken.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
-    } else if (maxScore === technisch) {
-      const beroep = kiesBeroep(beroepenTechnisch);
-      resultaatTekst = `Je bent technisch! Je vindt het leuk om dingen te bouwen, repareren of uitvinden.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
-    } else {
-      const beroep = kiesBeroep(beroepenSociaal);
-      resultaatTekst = `Je bent sociaal! Je helpt graag anderen en vindt het fijn om met mensen te werken.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
-    }
+    // Resultaat tonen
+    let resultaatTekst = "Dit zijn beroepen die bij jou passen:\n\n";
+    gesorteerd.forEach((beroep, i) => {
+      resultaatTekst += `${i+1}. ${beroep}\n`;
+    });
 
-    // Resultaat laten zien (verwijder eerst eerdere resultaten)
-    let bestaandResultaat = document.getElementById("resultaat");
-    if (bestaandResultaat) {
-      bestaandResultaat.remove();
-    }
+    // Verwijder oud resultaat als dat er is
+    const oudResultaat = document.getElementById("resultaat");
+    if(oudResultaat) oudResultaat.remove();
 
+    // Maak nieuw resultaat
     const resultaatDiv = document.createElement("div");
     resultaatDiv.id = "resultaat";
     resultaatDiv.textContent = resultaatTekst;
     quizContainer.appendChild(resultaatDiv);
-
-    // Scroll naar resultaat
-    resultaatDiv.scrollIntoView({ behavior: "smooth" });
+    resultaatDiv.scrollIntoView({behavior: "smooth"});
   };
+  quizContainer.appendChild(button);
 </script>
 
 </body>
