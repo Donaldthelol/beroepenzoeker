@@ -95,130 +95,166 @@
 </footer>
 
 <script>
-  // Vragen, elk gekoppeld aan beroepen (meerdere mogelijk)
-  // Je geeft per antwoord 'ja' = 2 punten, 'beetje' = 1 punt, 'nee' = 0 punten
-  // Zo kan het resultaat "slim" bepalen welke beroepen het beste bij jou passen.
   const vragen = [
-    { vraag: "Speel je graag buiten?", beroepen: ["Boswachter", "Sportleraar", "Landbouwer"] },
-    { vraag: "Vind je het leuk om puzzels op te lossen?", beroepen: ["Programmeur", "Detective", "Wetenschapper"] },
-    { vraag: "Werk je graag met dieren?", beroepen: ["Dierenarts", "Boer", "Dierverzorger"] },
-    { vraag: "Hou je van tekenen of schilderen?", beroepen: ["Kunstenaar", "Grafisch ontwerper", "Modeontwerper"] },
-    { vraag: "Ben je goed in rekenen?", beroepen: ["Ingenieur", "Accountant", "Wiskundige"] },
-    { vraag: "Help je graag andere mensen?", beroepen: ["Verpleegkundige", "Dokter", "Leraar"] },
-    { vraag: "Wil je later iets bouwen?", beroepen: ["Bouwvakker", "Architect", "Ingenieur"] },
-    { vraag: "Vind je het leuk om verhalen te verzinnen?", beroepen: ["Schrijver", "Scenarioschrijver", "Journalist"] },
-    { vraag: "Werk je graag samen met anderen?", beroepen: ["Projectleider", "Coach", "Leraar"] },
-    { vraag: "Zorg je graag voor planten of dieren?", beroepen: ["Tuinier", "Boswachter", "Dierenverzorger"] },
-    { vraag: "Hou je van computers of tablets?", beroepen: ["Programmeur", "IT-specialist", "Webdesigner"] },
-    { vraag: "Wil je later beroemd worden?", beroepen: ["Acteur", "Zanger", "Sporter"] },
-    { vraag: "Hou je van zingen of muziek maken?", beroepen: ["Muzikant", "Zanger", "Componist"] },
-    { vraag: "Vind je het leuk om dingen te repareren?", beroepen: ["Monteur", "Elektricien", "Technicus"] },
-    { vraag: "Wil je graag chef-kok worden?", beroepen: ["Chef-kok", "Banketbakker", "Restauranthouder"] },
-    { vraag: "Ben je nieuwsgierig naar hoe dingen werken?", beroepen: ["Wetenschapper", "Uitvinder", "Technicus"] },
-    { vraag: "Hou je van lezen?", beroepen: ["Schrijver", "Bibliothecaris", "Journalist"] },
-    { vraag: "Ben je graag op het podium?", beroepen: ["Acteur", "Presentator", "Zanger"] },
-    { vraag: "Help je graag kinderen?", beroepen: ["Leraar", "Kinderverzorger", "Pedagoog"] },
-    { vraag: "Hou je van sport of bewegen?", beroepen: ["Sportleraar", "Fysiotherapeut", "Atleet"] },
-    { vraag: "Hou je van experimenten en proefjes?", beroepen: ["Wetenschapper", "Scheikundige", "Technicus"] },
-    { vraag: "Ben je goed in plannen?", beroepen: ["Projectleider", "Eventplanner", "Manager"] },
-    { vraag: "Vind je het leuk om met je handen te werken?", beroepen: ["Timmerman", "Kunstsmid", "Monteur"] },
-    { vraag: "Hou je van dingen netjes maken?", beroepen: ["Schoonmaker", "Interieurstylist", "Organisator"] },
-    { vraag: "Wil je graag een uniform dragen?", beroepen: ["Politieagent", "Brandweerman", "Militair"] },
-    { vraag: "Hou je van water, boten of de zee?", beroepen: ["Matroos", "Visser", "Bioloog"] },
-    { vraag: "Zou je later in een ziekenhuis willen werken?", beroepen: ["Dokter", "Verpleegkundige", "Chirurg"] },
-    { vraag: "Wil je graag in een winkel werken?", beroepen: ["Verkoper", "Manager", "Etaleur"] },
-    { vraag: "Vind je het leuk om spelletjes te maken?", beroepen: ["Spelontwikkelaar", "Programmeur", "Animator"] },
-    { vraag: "Hou je van fotograferen of filmen?", beroepen: ["Fotograaf", "Cameraman", "Filmregisseur"] },
-    { vraag: "Wil je graag een dierentuin runnen?", beroepen: ["Dierverzorger", "Manager", "Bioloog"] },
-    { vraag: "Hou je van tekenen op de computer?", beroepen: ["Grafisch ontwerper", "Animator", "Game designer"] },
-    { vraag: "Zou je graag een piloot willen zijn?", beroepen: ["Piloot", "Luchtverkeersleider", "Reisleider"] },
-    { vraag: "Ben je goed in dingen uitleggen?", beroepen: ["Leraar", "Trainer", "Coach"] },
-    { vraag: "Hou je van natuur en bomen?", beroepen: ["Boswachter", "Bioloog", "Tuinier"] },
-    { vraag: "Vind je het leuk om te koken?", beroepen: ["Chef-kok", "Banketbakker", "Voedingsdeskundige"] },
-    { vraag: "Werk je graag met gereedschap?", beroepen: ["Timmerman", "Monteur", "Elektricien"] },
-    { vraag: "Hou je van auto's of voertuigen?", beroepen: ["Automonteur", "Chauffeur", "Verkeersleider"] },
-    { vraag: "Ben je goed in luisteren naar anderen?", beroepen: ["Psycholoog", "Coach", "Maatschappelijk werker"] },
-    { vraag: "Zou je graag op een boerderij werken?", beroepen: ["Boer", "Dierverzorger", "Landbouwer"] },
-    { vraag: "Hou je van knutselen?", beroepen: ["Kunstenares", "Timmerman", "Ontwerper"] },
-    { vraag: "Ben je goed met cijfers en geld?", beroepen: ["Accountant", "Bankier", "Ondernemer"] },
-    { vraag: "Vind je het leuk om mensen te interviewen?", beroepen: ["Journalist", "Presentator", "Schrijver"] },
-    { vraag: "Ben je graag de baas?", beroepen: ["Manager", "Ondernemer", "Directeur"] },
-    { vraag: "Wil je graag dingen ontwerpen?", beroepen: ["Architect", "Grafisch ontwerper", "Modeontwerper"] },
-    { vraag: "Werk je graag met dieren zoals honden of katten?", beroepen: ["Dierenarts", "Hondentrainer", "Dierverzorger"] },
-    { vraag: "Zou je graag een robot willen maken?", beroepen: ["Programmeur", "Ingenieur", "Technicus"] },
-    { vraag: "Ben je goed in kaartlezen of navigeren?", beroepen: ["Piloot", "Kapitein", "Luchtverkeersleider"] },
-    { vraag: "Hou je van talen leren?", beroepen: ["Vertaler", "Tolk", "Leraar"] },
-    { vraag: "Wil je later je eigen bedrijf hebben?", beroepen: ["Ondernemer", "Manager", "Directeur"] }
+    "Speel je graag buiten?",
+    "Vind je het leuk om puzzels op te lossen?",
+    "Werk je graag met dieren?",
+    "Hou je van tekenen of schilderen?",
+    "Ben je goed in rekenen?",
+    "Help je graag andere mensen?",
+    "Wil je later iets bouwen?",
+    "Vind je het leuk om verhalen te verzinnen?",
+    "Werk je graag samen met anderen?",
+    "Zorg je graag voor planten of dieren?",
+    "Hou je van computers of tablets?",
+    "Wil je later beroemd worden?",
+    "Hou je van zingen of muziek maken?",
+    "Vind je het leuk om dingen te repareren?",
+    "Wil je graag chef-kok worden?",
+    "Ben je nieuwsgierig naar hoe dingen werken?",
+    "Hou je van lezen?",
+    "Ben je graag op het podium?",
+    "Help je graag kinderen?",
+    "Hou je van sport of bewegen?",
+    "Hou je van experimenten en proefjes?",
+    "Ben je goed in plannen?",
+    "Vind je het leuk om met je handen te werken?",
+    "Hou je van dingen netjes maken?",
+    "Wil je graag een uniform dragen?",
+    "Hou je van water, boten of de zee?",
+    "Zou je later in een ziekenhuis willen werken?",
+    "Wil je graag in een winkel werken?",
+    "Vind je het leuk om spelletjes te maken?",
+    "Hou je van fotograferen of filmen?",
+    "Wil je graag een dierentuin runnen?",
+    "Hou je van tekenen op de computer?",
+    "Zou je graag een piloot willen zijn?",
+    "Ben je goed in dingen uitleggen?",
+    "Hou je van natuur en bomen?",
+    "Vind je het leuk om te koken?",
+    "Werk je graag met gereedschap?",
+    "Hou je van auto's of voertuigen?",
+    "Ben je goed in luisteren naar anderen?",
+    "Zou je graag op een boerderij werken?",
+    "Hou je van knutselen?",
+    "Ben je goed met cijfers en geld?",
+    "Vind je het leuk om mensen te interviewen?",
+    "Ben je graag de baas?",
+    "Wil je graag dingen ontwerpen?",
+    "Werk je graag met dieren zoals honden of katten?",
+    "Zou je graag een robot willen maken?",
+    "Ben je goed in kaartlezen of navigeren?",
+    "Hou je van talen leren?",
+    "Wil je later je eigen bedrijf hebben?"
   ];
 
+  // Type van elke vraag (Creatief, Technisch, Sociaal) op volgorde (modulus 3)
+  // 0 = Creatief, 1 = Technisch, 2 = Sociaal
   const quizContainer = document.getElementById("quiz");
 
-  // Maak vragen met opties
-  vragen.forEach((item, i) => {
-    const divVraag = document.createElement("div");
-    divVraag.className = "question";
-    divVraag.innerHTML = `
-      <h3>Vraag ${i + 1}: ${item.vraag}</h3>
+  vragen.forEach((vraag, index) => {
+    const vraagDiv = document.createElement("div");
+    vraagDiv.className = "question";
+
+    vraagDiv.innerHTML = `
+      <h3>Vraag ${index + 1}: ${vraag}</h3>
       <div class="options">
-        <label><input type="radio" name="vraag${i}" value="ja" /> Ja</label>
-        <label><input type="radio" name="vraag${i}" value="beetje" /> Een beetje</label>
-        <label><input type="radio" name="vraag${i}" value="nee" /> Nee</label>
+        <label><input type="radio" name="vraag${index}" value="ja" /> Ja</label>
+        <label><input type="radio" name="vraag${index}" value="beetje" /> Een beetje</label>
+        <label><input type="radio" name="vraag${index}" value="nee" /> Nee</label>
       </div>
     `;
-    quizContainer.appendChild(divVraag);
+
+    quizContainer.appendChild(vraagDiv);
   });
 
-  // Knop voor resultaat
   const button = document.createElement("button");
   button.textContent = "Resultaat bekijken";
   quizContainer.appendChild(button);
 
   button.onclick = () => {
-    // Maak een object met beroepen en hun scores
-    const scores = {};
+    let creatief = 0;
+    let technisch = 0;
+    let sociaal = 0;
 
-    // Loop alle vragen langs
-    for(let i = 0; i < vragen.length; i++){
+    for (let i = 0; i < vragen.length; i++) {
       const radios = document.getElementsByName(`vraag${i}`);
       let antwoord = null;
-      for (let r of radios) {
-        if(r.checked) {
-          antwoord = r.value;
+
+      for (let radio of radios) {
+        if (radio.checked) {
+          antwoord = radio.value;
           break;
         }
       }
-      if(!antwoord) {
-        alert(`Je bent vraag ${i + 1} vergeten in te vullen!`);
+
+      if (!antwoord) {
+        alert(`Je hebt vraag ${i + 1} nog niet beantwoord!`);
         return;
       }
 
-      // Punten toekennen: ja=2, beetje=1, nee=0
       let punten = antwoord === "ja" ? 2 : antwoord === "beetje" ? 1 : 0;
 
-      // Voeg punten toe aan alle beroepen die horen bij deze vraag
-      vragen[i].beroepen.forEach(beroep => {
-        if(!scores[beroep]) scores[beroep] = 0;
-        scores[beroep] += punten;
-      });
+      if (i % 3 === 0) creatief += punten;
+      else if (i % 3 === 1) technisch += punten;
+      else sociaal += punten;
     }
 
-    // Sorteer beroepen op hoogste score
-    const sortedBeroepen = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+    // Beroepen per type met voorbeelden
+    const beroepenCreatief = [
+      "Kunstenaar",
+      "Schrijver",
+      "Muzikant",
+      "Modeontwerper",
+      "Illustrator",
+      "Grafisch ontwerper"
+    ];
 
-    // Pak top 3 beroepen
-    const top3 = sortedBeroepen.slice(0,3);
+    const beroepenTechnisch = [
+      "Programmeur",
+      "Ingenieur",
+      "Technicus",
+      "Piloot",
+      "Uitvinder",
+      "Elektricien"
+    ];
 
-    // Resultaat maken
-    let resultaatTekst = "🎉 Dit zijn de beroepen die het beste bij jou passen:\n\n";
-    top3.forEach(([beroep, score], index) => {
-      resultaatTekst += `${index + 1}. ${beroep} (score: ${score})\n`;
-    });
+    const beroepenSociaal = [
+      "Leraar",
+      "Dokter",
+      "Maatschappelijk werker",
+      "Coach",
+      "Verpleegkundige",
+      "Kinderdagverblijf medewerker"
+    ];
 
-    // Verwijder eerdere resultaat
+    // Helper functie om random beroep te kiezen uit lijst
+    function kiesBeroep(lijst) {
+      return lijst[Math.floor(Math.random() * lijst.length)];
+    }
+
+    // Welke score is het hoogst?
+    const maxScore = Math.max(creatief, technisch, sociaal);
+
+    let resultaatTekst = "";
+
+    if (maxScore === creatief) {
+      const beroep = kiesBeroep(beroepenCreatief);
+      resultaatTekst = `Je bent creatief! Je houdt van tekenen, muziek maken en mooie dingen maken.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
+    } else if (maxScore === technisch) {
+      const beroep = kiesBeroep(beroepenTechnisch);
+      resultaatTekst = `Je bent technisch! Je vindt het leuk om dingen te bouwen, repareren of uitvinden.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
+    } else {
+      const beroep = kiesBeroep(beroepenSociaal);
+      resultaatTekst = `Je bent sociaal! Je helpt graag anderen en vindt het fijn om met mensen te werken.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
+    }
+
+    // Resultaat laten zien (verwijder eerst eerdere resultaten)
     let bestaandResultaat = document.getElementById("resultaat");
-    if (bestaandResultaat) bestaandResultaat.remove();
+    if (bestaandResultaat) {
+      bestaandResultaat.remove();
+    }
 
-    // Maak nieuw resultaat element
     const resultaatDiv = document.createElement("div");
     resultaatDiv.id = "resultaat";
     resultaatDiv.textContent = resultaatTekst;
