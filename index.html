@@ -290,5 +290,42 @@
   });
 </script>
 
+button.onclick = () => {
+  // punten per type beroep
+  let creatief = 0;
+  let technisch = 0;
+  let sociaal = 0;
+
+  vragen.forEach((vraag, i) => {
+    const radios = document.getElementsByName(`vraag${i}`);
+    let antwoord = null;
+    radios.forEach(radio => {
+      if (radio.checked) antwoord = radio.value;
+    });
+
+    if (!antwoord) {
+      alert(`Je hebt vraag ${i + 1} nog niet beantwoord!`);
+      return;
+    }
+
+    let punten = antwoord === "ja" ? 2 : antwoord === "beetje" ? 1 : 0;
+
+    // Voorbeeld: verdeel de vragen over de types (pas dit aan hoe je wilt)
+    if (i % 3 === 0) creatief += punten;
+    else if (i % 3 === 1) technisch += punten;
+    else sociaal += punten;
+  });
+
+  // Beroep kiezen op basis van hoogste punten
+  let maxScore = Math.max(creatief, technisch, sociaal);
+  let beroep;
+
+  if (maxScore === creatief) beroep = "Je bent creatief! Misschien iets met tekenen, muziek of schrijven.";
+  else if (maxScore === technisch) beroep = "Je bent technisch! Misschien iets met computers, bouwen of repareren.";
+  else beroep = "Je bent sociaal! Misschien iets met helpen, lesgeven of zorgen.";
+
+  // Resultaat tonen
+  quizContainer.innerHTML += `<h2>Jouw resultaat:</h2><p>${beroep}</p>`;
+};
 </body>
 </html>
