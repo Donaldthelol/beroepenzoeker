@@ -9,12 +9,17 @@
       font-family: 'Comic Sans MS', cursive;
       background: linear-gradient(to right, #fceabb, #f8b500);
       margin: 0; padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     header {
       background-color: #ff6f61;
       color: white;
       text-align: center;
       padding: 20px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
     .container {
       max-width: 800px;
@@ -23,6 +28,7 @@
       border-radius: 15px;
       padding: 20px;
       box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      flex-grow: 1;
     }
     .question {
       margin-bottom: 20px;
@@ -32,19 +38,25 @@
     }
     .options label {
       display: block;
-      margin: 5px 0;
+      margin: 6px 0;
       cursor: pointer;
       font-size: 1.1em;
     }
     button {
       background-color: #4CAF50;
       color: white;
-      font-size: 1.2em;
-      padding: 10px 20px;
+      font-size: 1.3em;
+      padding: 12px 25px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       margin-top: 20px;
+      transition: background-color 0.3s ease;
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
     }
     button:hover {
       background-color: #45a049;
@@ -54,15 +66,18 @@
       padding: 15px;
       font-size: 0.9em;
       color: #666;
-      margin-top: 30px;
+      background: #f8b500;
+      box-shadow: 0 -3px 6px rgba(0,0,0,0.2);
     }
     #resultaat {
       background: #ffefc1;
-      border-radius: 12px;
-      padding: 15px;
+      border-radius: 15px;
+      padding: 20px;
       margin-top: 30px;
-      font-size: 1.2em;
+      font-size: 1.3em;
       color: #444;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      white-space: pre-line;
     }
   </style>
 </head>
@@ -133,8 +148,8 @@
     "Wil je later je eigen bedrijf hebben?"
   ];
 
-  // Voorbeeld categorieën: Creatief, Technisch, Sociaal (verdeeld over de vragen)
-  // Per vraag: index % 3 === 0 => Creatief, 1 => Technisch, 2 => Sociaal
+  // Type van elke vraag (Creatief, Technisch, Sociaal) op volgorde (modulus 3)
+  // 0 = Creatief, 1 = Technisch, 2 = Sociaal
   const quizContainer = document.getElementById("quiz");
 
   vragen.forEach((vraag, index) => {
@@ -144,9 +159,9 @@
     vraagDiv.innerHTML = `
       <h3>Vraag ${index + 1}: ${vraag}</h3>
       <div class="options">
-        <label><input type="radio" name="vraag${index}" value="ja"> Ja</label>
-        <label><input type="radio" name="vraag${index}" value="beetje"> Een beetje</label>
-        <label><input type="radio" name="vraag${index}" value="nee"> Nee</label>
+        <label><input type="radio" name="vraag${index}" value="ja" /> Ja</label>
+        <label><input type="radio" name="vraag${index}" value="beetje" /> Een beetje</label>
+        <label><input type="radio" name="vraag${index}" value="nee" /> Nee</label>
       </div>
     `;
 
@@ -162,19 +177,19 @@
     let technisch = 0;
     let sociaal = 0;
 
-    for(let i = 0; i < vragen.length; i++) {
+    for (let i = 0; i < vragen.length; i++) {
       const radios = document.getElementsByName(`vraag${i}`);
       let antwoord = null;
 
-      for(let radio of radios) {
-        if(radio.checked) {
+      for (let radio of radios) {
+        if (radio.checked) {
           antwoord = radio.value;
           break;
         }
       }
 
       if (!antwoord) {
-        alert(`Je hebt vraag ${i+1} nog niet beantwoord!`);
+        alert(`Je hebt vraag ${i + 1} nog niet beantwoord!`);
         return;
       }
 
@@ -185,30 +200,68 @@
       else sociaal += punten;
     }
 
-    let maxScore = Math.max(creatief, technisch, sociaal);
+    // Beroepen per type met voorbeelden
+    const beroepenCreatief = [
+      "Kunstenaar",
+      "Schrijver",
+      "Muzikant",
+      "Modeontwerper",
+      "Illustrator",
+      "Grafisch ontwerper"
+    ];
+
+    const beroepenTechnisch = [
+      "Programmeur",
+      "Ingenieur",
+      "Technicus",
+      "Piloot",
+      "Uitvinder",
+      "Elektricien"
+    ];
+
+    const beroepenSociaal = [
+      "Leraar",
+      "Dokter",
+      "Maatschappelijk werker",
+      "Coach",
+      "Verpleegkundige",
+      "Kinderdagverblijf medewerker"
+    ];
+
+    // Helper functie om random beroep te kiezen uit lijst
+    function kiesBeroep(lijst) {
+      return lijst[Math.floor(Math.random() * lijst.length)];
+    }
+
+    // Welke score is het hoogst?
+    const maxScore = Math.max(creatief, technisch, sociaal);
+
     let resultaatTekst = "";
 
     if (maxScore === creatief) {
-      resultaatTekst = `<strong>Creatief</strong>: Je bent creatief! Misschien iets met tekenen, muziek, schrijven, of ontwerpen. Beroepen zoals kunstenaar, schrijver, modeontwerper of muzikant passen goed bij jou.`;
+      const beroep = kiesBeroep(beroepenCreatief);
+      resultaatTekst = `Je bent creatief! Je houdt van tekenen, muziek maken en mooie dingen maken.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
     } else if (maxScore === technisch) {
-      resultaatTekst = `<strong>Technisch</strong>: Je bent technisch! Misschien iets met computers, bouwen, repareren of uitvinden. Denk aan beroepen zoals programmeur, technicus, ingenieur of piloot.`;
+      const beroep = kiesBeroep(beroepenTechnisch);
+      resultaatTekst = `Je bent technisch! Je vindt het leuk om dingen te bouwen, repareren of uitvinden.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
     } else {
-      resultaatTekst = `<strong>Sociaal</strong>: Je bent sociaal! Je helpt graag anderen, bent goed in praten en samenwerken. Beroepen zoals leraar, dokter, maatschappelijk werker of coach passen bij jou.`;
+      const beroep = kiesBeroep(beroepenSociaal);
+      resultaatTekst = `Je bent sociaal! Je helpt graag anderen en vindt het fijn om met mensen te werken.\nEen leuk beroep voor jou kan zijn: ${beroep}.`;
     }
 
-    // Resultaat tonen, eerst check of #resultaat bestaat en verwijderen
+    // Resultaat laten zien (verwijder eerst eerdere resultaten)
     let bestaandResultaat = document.getElementById("resultaat");
-    if(bestaandResultaat) {
+    if (bestaandResultaat) {
       bestaandResultaat.remove();
     }
 
     const resultaatDiv = document.createElement("div");
     resultaatDiv.id = "resultaat";
-    resultaatDiv.innerHTML = `<h2>Jouw resultaat:</h2><p>${resultaatTekst}</p>`;
+    resultaatDiv.textContent = resultaatTekst;
     quizContainer.appendChild(resultaatDiv);
 
     // Scroll naar resultaat
-    resultaatDiv.scrollIntoView({behavior: "smooth"});
+    resultaatDiv.scrollIntoView({ behavior: "smooth" });
   };
 </script>
 
