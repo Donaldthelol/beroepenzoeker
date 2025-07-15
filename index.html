@@ -1,160 +1,37 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Beroepentest voor Kinderen</title>
-  <style>
-    body {
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(to right, #fceabb, #f8b500);
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #ff6f61;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    }
-    .question {
-      margin-bottom: 20px;
-    }
-    .question h3 {
-      color: #ff6f61;
-    }
-    .options label {
-      display: block;
-      margin: 5px 0;
-      cursor: pointer;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      font-size: 1em;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    #resultaat {
-      margin-top: 30px;
-      background: #fff2c2;
-      padding: 20px;
-      border-radius: 10px;
-      font-size: 1.2em;
-      color: #b30000;
-      font-weight: bold;
-    }
-    footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9em;
-      color: #666;
-    }
-  </style>
-</head>
-<body>
-
-<header>
-  <h1>🎯 Wat wil jij later worden?</h1>
-  <p>Doe de leuke beroepentest met 50 vragen!</p>
-</header>
-
-<div class="container" id="quiz"></div>
-
-<footer>
-  Gemaakt met 💡 voor slimme kinderen!
-</footer>
-
-<script>
-  const vragen = [
-    "Speel je graag buiten?", "Vind je het leuk om puzzels op te lossen?",
-    "Werk je graag met dieren?", "Hou je van tekenen of schilderen?",
-    "Ben je goed in rekenen?", "Help je graag andere mensen?",
-    "Wil je later iets bouwen?", "Vind je het leuk om verhalen te verzinnen?",
-    "Werk je graag samen met anderen?", "Zorg je graag voor planten of dieren?",
-    "Hou je van computers of tablets?", "Wil je later beroemd worden?",
-    "Hou je van zingen of muziek maken?", "Vind je het leuk om dingen te repareren?",
-    "Wil je graag chef-kok worden?", "Ben je nieuwsgierig naar hoe dingen werken?",
-    "Hou je van lezen?", "Ben je graag op het podium?",
-    "Help je graag kinderen?", "Hou je van sport of bewegen?",
-    "Hou je van experimenten en proefjes?", "Ben je goed in plannen?",
-    "Vind je het leuk om met je handen te werken?", "Hou je van dingen netjes maken?",
-    "Wil je graag een uniform dragen?", "Hou je van water, boten of de zee?",
-    "Zou je later in een ziekenhuis willen werken?", "Wil je graag in een winkel werken?",
-    "Vind je het leuk om spelletjes te maken?", "Hou je van fotograferen of filmen?",
-    "Wil je graag een dierentuin runnen?", "Hou je van tekenen op de computer?",
-    "Zou je graag een piloot willen zijn?", "Ben je goed in dingen uitleggen?",
-    "Hou je van natuur en bomen?", "Vind je het leuk om te koken?",
-    "Werk je graag met gereedschap?", "Hou je van auto's of voertuigen?",
-    "Ben je goed in luisteren naar anderen?", "Zou je graag op een boerderij werken?",
-    "Hou je van knutselen?", "Ben je goed met cijfers en geld?",
-    "Vind je het leuk om mensen te interviewen?", "Ben je graag de baas?",
-    "Wil je graag dingen ontwerpen?", "Werk je graag met dieren zoals honden of katten?",
-    "Zou je graag een robot willen maken?", "Ben je goed in kaartlezen of navigeren?",
-    "Hou je van talen leren?", "Wil je later je eigen bedrijf hebben?"
-  ];
-
-  const quizContainer = document.getElementById("quiz");
+button.onclick = () => {
+  // punten per type beroep
+  let creatief = 0;
+  let technisch = 0;
+  let sociaal = 0;
 
   vragen.forEach((vraag, i) => {
-    const vraagDiv = document.createElement("div");
-    vraagDiv.className = "question";
-    vraagDiv.innerHTML = `
-      <h3>Vraag ${i+1}: ${vraag}</h3>
-      <div class="options">
-        <label><input type="radio" name="vraag${i}" value="ja"> Ja</label>
-        <label><input type="radio" name="vraag${i}" value="beetje"> Een beetje</label>
-        <label><input type="radio" name="vraag${i}" value="nee"> Nee</label>
-      </div>
-    `;
-    quizContainer.appendChild(vraagDiv);
-  });
-
-  const button = document.createElement("button");
-  button.textContent = "Resultaat bekijken";
-  button.onclick = () => {
-    const keuzes = [];
-    vragen.forEach((vraag, i) => {
-      const keuze = document.querySelector(`input[name="vraag${i}"]:checked`);
-      if (keuze && keuze.value !== "nee") keuzes.push({ vraag, antwoord: keuze.value });
+    const radios = document.getElementsByName(`vraag${i}`);
+    let antwoord = null;
+    radios.forEach(radio => {
+      if (radio.checked) antwoord = radio.value;
     });
 
-    if (keuzes.length === 0) {
-      alert("Beantwoord minstens één vraag met 'Ja' of 'Een beetje'!");
+    if (!antwoord) {
+      alert(`Je hebt vraag ${i + 1} nog niet beantwoord!`);
       return;
     }
 
-    let resultaatTekst = "";
-    keuzes.forEach(({ vraag, antwoord }, i) => {
-      resultaatTekst += `• Omdat je '${antwoord}' antwoordde op: "${vraag}"\n`;
-    });
-    resultaatTekst += "\n➡️ Jij past bij beroepen waar je creatief, behulpzaam en nieuwsgierig mag zijn!";
+    let punten = antwoord === "ja" ? 2 : antwoord === "beetje" ? 1 : 0;
 
-    let resultaatDiv = document.getElementById("resultaat");
-    if (!resultaatDiv) {
-      resultaatDiv = document.createElement("div");
-      resultaatDiv.id = "resultaat";
-      quizContainer.appendChild(resultaatDiv);
-    }
-    resultaatDiv.textContent = resultaatTekst;
-    resultaatDiv.scrollIntoView({ behavior: "smooth" });
-  };
-  quizContainer.appendChild(button);
-</script>
+    // Voorbeeld: verdeel de vragen over de types (pas dit aan hoe je wilt)
+    if (i % 3 === 0) creatief += punten;
+    else if (i % 3 === 1) technisch += punten;
+    else sociaal += punten;
+  });
 
-</body>
-</html>
+  // Beroep kiezen op basis van hoogste punten
+  let maxScore = Math.max(creatief, technisch, sociaal);
+  let beroep;
+
+  if (maxScore === creatief) beroep = "Je bent creatief! Misschien iets met tekenen, muziek of schrijven.";
+  else if (maxScore === technisch) beroep = "Je bent technisch! Misschien iets met computers, bouwen of repareren.";
+  else beroep = "Je bent sociaal! Misschien iets met helpen, lesgeven of zorgen.";
+
+  // Resultaat tonen
+  quizContainer.innerHTML += `<h2>Jouw resultaat:</h2><p>${beroep}</p>`;
+};
