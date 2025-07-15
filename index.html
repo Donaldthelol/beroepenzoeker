@@ -55,7 +55,8 @@
       padding: 20px;
       border-radius: 10px;
       font-size: 1.2em;
-      color: #333;
+      color: #b30000;
+      font-weight: bold;
     }
     footer {
       text-align: center;
@@ -107,37 +108,8 @@
     "Hou je van talen leren?", "Wil je later je eigen bedrijf hebben?"
   ];
 
-  const beroepenPerVraag = [
-    ["Boswachter", "Sportleraar", "Landbouwer"], ["Programmeur", "Detective"],
-    ["Dierenarts", "Boer", "Dierverzorger"], ["Kunstenaar", "Grafisch ontwerper"],
-    ["Rekenmeester", "Ingenieur", "Programmeur"], ["Verpleegkundige", "Leraar"],
-    ["Bouwvakker", "Architect"], ["Schrijver", "Verhalenmaker"],
-    ["Coach", "Projectleider"], ["Tuinier", "Dierverzorger"],
-    ["Webdesigner", "IT-specialist"], ["Acteur", "Zanger"],
-    ["Muzikant", "Componist"], ["Monteur", "Elektricien"],
-    ["Chef-kok", "Bakker"], ["Uitvinder", "Technicus"],
-    ["Schrijver", "Journalist"], ["Acteur", "Presentator"],
-    ["Leraar", "Kinderverzorger"], ["Sportcoach", "Atleet"],
-    ["Scheikundige", "Wetenschapper"], ["Eventplanner", "Manager"],
-    ["Timmerman", "Kunstenaar"], ["Stylist", "Schoonmaker"],
-    ["Politieagent", "Brandweerman"], ["Matroos", "Waterbioloog"],
-    ["Dokter", "Zorgverlener"], ["Verkoper", "Etaleur"],
-    ["Game designer", "Programmeur"], ["Fotograaf", "Filmmaker"],
-    ["Dierentuinbaas", "Dierenverzorger"], ["Animator", "Grafisch ontwerper"],
-    ["Piloot", "Vliegtuigmonteur"], ["Leraar", "Coach"],
-    ["Boswachter", "Tuinier"], ["Chef-kok", "Voedingsdeskundige"],
-    ["Monteur", "Technicus"], ["Autotechnicus", "Chauffeur"],
-    ["Psycholoog", "Hulpverlener"], ["Boer", "Dierverzorger"],
-    ["Knutselaar", "Ontwerper"], ["Boekhouder", "Bankier"],
-    ["Journalist", "Vlogger"], ["Ondernemer", "Manager"],
-    ["Architect", "Ontwerper"], ["Hondenuitlater", "Dierenarts"],
-    ["Robotbouwer", "Ingenieur"], ["Navigator", "Reisleider"],
-    ["Tolk", "Leraar"], ["Ondernemer", "Startup oprichter"]
-  ];
-
   const quizContainer = document.getElementById("quiz");
 
-  // Vragen maken
   vragen.forEach((vraag, i) => {
     const vraagDiv = document.createElement("div");
     vraagDiv.className = "question";
@@ -152,33 +124,25 @@
     quizContainer.appendChild(vraagDiv);
   });
 
-  // Resultaatknop
   const button = document.createElement("button");
   button.textContent = "Resultaat bekijken";
   button.onclick = () => {
-    let gekozen = [];
+    const keuzes = [];
+    vragen.forEach((vraag, i) => {
+      const keuze = document.querySelector(`input[name="vraag${i}"]:checked`);
+      if (keuze && keuze.value !== "nee") keuzes.push({ vraag, antwoord: keuze.value });
+    });
 
-    for (let i = 0; i < vragen.length; i++) {
-      const antwoord = document.querySelector(`input[name="vraag${i}"]:checked`);
-      if (antwoord && (antwoord.value === "ja" || antwoord.value === "beetje")) {
-        gekozen.push(...beroepenPerVraag[i]);
-      }
-    }
-
-    if (gekozen.length === 0) {
-      alert("Beantwoord eerst wat vragen met Ja of Een beetje!");
+    if (keuzes.length === 0) {
+      alert("Beantwoord minstens één vraag met 'Ja' of 'Een beetje'!");
       return;
     }
 
-    const tellen = {};
-    gekozen.forEach(b => tellen[b] = (tellen[b] || 0) + 1);
-
-    const top = Object.entries(tellen)
-      .sort((a,b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([beroep]) => beroep);
-
-    const resultaatTekst = `🎉 Dit zijn beroepen die goed bij je passen:\n\n1. ${top[0]}\n2. ${top[1]}\n3. ${top[2]}`;
+    let resultaatTekst = "";
+    keuzes.forEach(({ vraag, antwoord }, i) => {
+      resultaatTekst += `• Omdat je '${antwoord}' antwoordde op: "${vraag}"\n`;
+    });
+    resultaatTekst += "\n➡️ Jij past bij beroepen waar je creatief, behulpzaam en nieuwsgierig mag zijn!";
 
     let resultaatDiv = document.getElementById("resultaat");
     if (!resultaatDiv) {
@@ -189,7 +153,6 @@
     resultaatDiv.textContent = resultaatTekst;
     resultaatDiv.scrollIntoView({ behavior: "smooth" });
   };
-
   quizContainer.appendChild(button);
 </script>
 
